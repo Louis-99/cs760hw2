@@ -41,38 +41,45 @@ def make_subtree(training_set: list[tuple[float, float, bool]]) -> InternalNode 
 def determine_candidate_splits(training_set: list[tuple[float, float, bool]]) -> list[tuple[int, float]]:
     res : list[tuple[int, float]] = []
 
-    min0 = min(x[0] for x in training_set)
-    min1 = min(x[1] for x in training_set)
+    # min0 = min(x[0] for x in training_set)
+    # min1 = min(x[1] for x in training_set)
 
-    doubleState = False
+    # doubleState = False
 
-    cmp_index = 0
-    def cmp(lhs, rhs):
-        if lhs[cmp_index] != rhs[cmp_index]:
-            return lhs[cmp_index]-rhs[cmp_index]
-        else:
-            return lhs[LABEL_INDEX]-rhs[LABEL_INDEX]
+    # cmp_index = 0
+    # def cmp(lhs, rhs):
+    #     if lhs[cmp_index] != rhs[cmp_index]:
+    #         return lhs[cmp_index]-rhs[cmp_index]
+    #     else:
+    #         return lhs[LABEL_INDEX]-rhs[LABEL_INDEX]
 
-    set0 = sorted(training_set, key=cmp_to_key(cmp))
-    for i in range(1, len(set0)):
-        if set0[i][LABEL_INDEX] != set0[i-1][LABEL_INDEX] or doubleState:
-            if set0[i][0] > min0:
-                res.append((0, set0[i][0]))
+    # set0 = sorted(training_set, key=cmp_to_key(cmp))
+    # for i in range(1, len(set0)):
+    #     if set0[i][LABEL_INDEX] != set0[i-1][LABEL_INDEX] or doubleState:
+    #         if doubleState:
+    #             doubleState = False
+    #         if set0[i][0] > min0:
+    #             res.append((0, set0[i][0]))
         
-        if set0[i][LABEL_INDEX] != set0[i-1][LABEL_INDEX]:
-            doubleState = (set0[i][0] == set0[i-1][0])
+    #     if set0[i][LABEL_INDEX] != set0[i-1][LABEL_INDEX]:
+    #         doubleState = (set0[i][0] == set0[i-1][0])
     
-    cmp_index = 1
-    doubleState = False
-    set1 = sorted(training_set, key=cmp_to_key(cmp))
-    for i in range(1, len(training_set)):
-        if set1[i][LABEL_INDEX] != set1[i-1][LABEL_INDEX] or doubleState:
-            if set1[i][1] > min1:
-                res.append((1, set1[i][1]))
+    # cmp_index = 1
+    # doubleState = False
+    # set1 = sorted(training_set, key=cmp_to_key(cmp))
+    # for i in range(1, len(training_set)):
+    #     if set1[i][LABEL_INDEX] != set1[i-1][LABEL_INDEX] or doubleState:
+    #         if doubleState:
+    #             doubleState = False
+    #         if set1[i][1] > min1:
+    #             res.append((1, set1[i][1]))
         
-        if set0[i][LABEL_INDEX] != set0[i-1][LABEL_INDEX]:
-            doubleState = (set0[i][0] == set0[i-1][0])
+    #     if set0[i][LABEL_INDEX] != set0[i-1][LABEL_INDEX]:
+    #         doubleState = (set1[i][1] == set1[i-1][1])
 
+    for v in training_set:
+        res.append((0, v[0]))
+        res.append((1, v[1])) 
     return res
 
 # if returns None, then sopping criteria meets
@@ -82,6 +89,7 @@ def find_best_split(training_set: list[tuple[float, float, bool]], split_set: li
     rank = []
     for i, (dim, c) in enumerate(split_set):
         gr = gain_ratio(training_set, dim, c)
+        # gr = info_gain(training_set, dim, c)
         if gr is not None:
             rank.append((gr, i))
     if len(rank) == 0:
@@ -167,12 +175,29 @@ def decision_tree_test(tree: LeafNode | InternalNode, value: Tuple[float, float]
     else:
         return decision_tree_test(tree.else_branch, value)
 
+# if __name__ == '__main__':
+#     d = read_data("Druns.txt")
+#     c = determine_candidate_splits(d)
+#     for dim, thres in c:
+#         ig = gain_ratio(d, dim, thres)
+#         print(f"cut:({dim+1}, {thres}) gain ratio: {ig}")
+#     for dim, thres in c:
+#         ig = info_gain(d, dim, thres)
+#         print(f"cut:({dim+1}, {thres}) info gain: {ig}") 
+    
+#     d = read_data("D3leaves.txt")
+#     tree = make_subtree(d)
+#     print(tree)
+
 if __name__ == '__main__':
     d = read_data("D2.txt")
-    c = determine_candidate_splits(d)
-    for dim, thres in c:
-        ig = gain_ratio(d, dim, thres)
-        print(f"cut:({dim+1}, {thres}) gain ratio: {ig}")
-        
     tree = make_subtree(d)
     print(tree)
+
+# if __name__ == '__main__':
+#     d = read_data("Druns.txt")
+#     print(info_gain(d, 1, 8))
+#     print(info_gain(d, 1, 6))
+
+#     print(gain_ratio(d, 1, 8))
+#     print(gain_ratio(d, 1, 6))

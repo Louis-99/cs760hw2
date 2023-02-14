@@ -23,7 +23,7 @@ def get_n_err(num):
     print(f"num: {num} n: {n}, err: {err}")
     return n, err
 
-plt.rcParams['text.usetex'] = True
+# plt.rcParams['text.usetex'] = True
 
 def main():
     n = [0]*5
@@ -42,3 +42,18 @@ def main():
 
 if __name__== '__main__':
     main()
+
+
+# if use information grain ratio
+# num: 32   n: 13, err: 0.15486725663716816
+# num: 128  n: 29, err: 0.09236725663716816
+# num: 512  n: 61, err: 0.06360619469026552
+# num: 2048 n: 121, err: 0.0331858407079646
+# num: 8192 n: 263, err: 0.013274336283185861
+
+# if use infromation grain
+# num: 32   n: 11, err: 0.18694690265486724
+# num: 128  n: 23, err: 0.09126106194690264
+# num: 512  n: 51, err: 0.05143805309734517
+# num: 2048 n: 103, err: 0.028761061946902644
+# num: 8192 n: 239, err: 0.011615044247787587
